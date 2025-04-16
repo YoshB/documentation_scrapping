@@ -30,10 +30,8 @@ try:
     fields = [
         FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True),
         FieldSchema(name="library_name", dtype=DataType.VARCHAR, max_length=256),
-        FieldSchema(name="language", dtype=DataType.VARCHAR, max_length=64),
         FieldSchema(name="description", dtype=DataType.VARCHAR, max_length=1024),
-        FieldSchema(name="code", dtype=DataType.VARCHAR, max_length=2048),
-        FieldSchema(name="version", dtype=DataType.VARCHAR, max_length=64),
+        FieldSchema(name="content ", dtype=DataType.VARCHAR, max_length=2048),
         FieldSchema(name="vector", dtype=DataType.FLOAT_VECTOR, dim=vector_dim)
     ]
 

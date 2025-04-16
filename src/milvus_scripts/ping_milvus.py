@@ -1,7 +1,7 @@
 from users_controller import create_user, change_user_password
 import os
 from dotenv import load_dotenv
-from pymilvus import connections
+from pymilvus import connections, utility
 
 # Cargar variables del entorno
 load_dotenv()
@@ -33,8 +33,8 @@ try:
             secure=False
         )
     print(f"Conectando a Milvus en {milvus_host}:{milvus_port} como root")
-
-    change_user_password(username='root', old_password=root_new_pwd, new_password='Milvus')
+    #utility.drop_collection("library_docs")
+    #change_user_password(username='root', old_password=root_new_pwd, new_password='Milvus')
 
 except Exception as e:
     print(e)

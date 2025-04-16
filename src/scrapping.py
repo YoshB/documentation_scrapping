@@ -21,41 +21,48 @@ def fetch_md_raw(url):
 
 from collections import defaultdict
 
-def split_markdown_by_subsections(md_text):
-    sections = defaultdict(dict)
-    current_title = None
-    current_subtitle = None
-    buffer = []
+def parse_markdown_to_dict(md_text: str) -> dict:
+    """
+    Parsea un archivo markdown en un diccionario con 'description' y 'content'.
 
-    lines = md_text.splitlines()
+    'description': título (primer encabezado #) + primer párrafo
+    'content': el resto del contenido
+    """
+    lines = md_text.strip().splitlines()
 
-    for line in lines:
-        if line.startswith('# '):  # Título principal
-            if current_subtitle and current_title:
-                sections[current_title][current_subtitle] = '\n'.join(buffer).strip()
-                buffer = []
-            current_title = line[2:].strip()
-            current_subtitle = None
-        elif line.startswith('## '):  # Subtítulo
-            if current_subtitle and current_title:
-                sections[current_title][current_subtitle] = '\n'.join(buffer).strip()
-                buffer = []
-            current_subtitle = line[3:].strip()
+    # Asegurarse de que empieza con un título
+    if not lines or not lines[0].startswith("# "):
+        raise ValueError("El archivo markdown debe comenzar con un título usando '# '")
+
+    title = lines[0]
+    
+    # Buscar el primer párrafo (primer bloque de texto no vacío después del título)
+    description_lines = [title]
+    rest_lines = []
+    found_paragraph = False
+
+    for line in lines[1:]:
+        if not found_paragraph:
+            if line.strip() == "":
+                continue
+            description_lines.append(line)
+            found_paragraph = True
         else:
-            buffer.append(line)
+            rest_lines.append(line)
 
-    # Guardar la última sección al final
-    if current_subtitle and current_title:
-        sections[current_title][current_subtitle] = '\n'.join(buffer).strip()
+    return {
+        "description": "\n".join(description_lines).strip(),
+        "content": "\n".join(rest_lines).strip()
+    }
 
-    return sections
 
 
 def main():
     url = scrap_url
     md = fetch_md_raw(url)
-    docs = split_markdown_by_subsections(md)
-    print(docs['Horizontal Bar Chart'])
+    print(md)
+    docs = parse_markdown_to_dict(md)
+    print(docs)
 
     #insert_in_milvus(docs)
 
