@@ -33,7 +33,7 @@ try:
             secure=False
         )
     print(f"Conectando a Milvus en {milvus_host}:{milvus_port} como root")
-    #utility.drop_collection("library_docs")
+    utility.drop_collection("library_docs")
     #change_user_password(username='root', old_password=root_new_pwd, new_password='Milvus')
 
 except Exception as e:
